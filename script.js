@@ -1,5 +1,6 @@
 class MusicPlayer {
   constructor() {
+
     this.src = [
       [
         "ViZZion",
@@ -33,7 +34,7 @@ class MusicPlayer {
       ]
     ];
     this.displayTrack = this.displayTrack.bind(this);
-
+    this.addTrackEndedListener = this.addTrackEndedListener.bind(this);
   }
 
   initialize() {
@@ -41,6 +42,10 @@ class MusicPlayer {
       this.renderList();
       this.displayTrack(0);
       this.addClickHandlers();
+
+      this.audioElement = document.getElementById('audio');
+      this.addTrackEndedListener();
+      this.audioElement.addEventListener('ended', this.addTrackEndedListener);
     });
   }
 
@@ -97,6 +102,18 @@ class MusicPlayer {
     document.getElementById('audio').src = audio;
 
     let audioElement = document.getElementById('audio');
+    // audioElement.addEventListener('ended', () => {
+
+    audioElement.removeEventListener('ended', this.addTrackEndedListener);
+    // let currentIndex = parseInt(document.querySelector('.is-active').dataset.index);
+    // let nextIndex = (currentIndex + 1) % this.src.length;
+    // console.log('new Date.now()');
+    // this.displayTrack(nextIndex);
+    // });
+  }
+
+  addTrackEndedListener() {
+    const audioElement = document.getElementById('audio');
     audioElement.addEventListener('ended', () => {
       let currentIndex = parseInt(document.querySelector('.is-active').dataset.index);
       let nextIndex = (currentIndex + 1) % this.src.length;
