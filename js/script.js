@@ -5,32 +5,32 @@ class MusicPlayer {
       [
         "ViZZion",
         "Keine Patrioten",
-        "./ViZZion - Keine Patrioten.mp3",
-        "./ViZZion.jpg"
+        "./mp3/ViZZion - Keine Patrioten.mp3",
+        "./img/ViZZion.jpg"
       ],
       [
         "Vizzion feat. Taktikka",
         "Nique la police",
-        "./ViZZion - Nique la police.mp3",
-        "./Vizzion_Nique-la-police.jpg"
+        "./mp3/ViZZion - Nique la police.mp3",
+        "./img/Vizzion_Nique-la-police.jpg"
       ],
       [
         "ViZZion",
         "Unter Verdacht",
-        "./ViZZion - Unter Verdacht.mp3",
-        "./VuZZion_Unter-Verdacht.jpg"
+        "./mp3/ViZZion - Unter Verdacht.mp3",
+        "./img/VuZZion_Unter-Verdacht.jpg"
       ],
       [
         "ViZZion",
         "Maxime",
-        "./ViZZion - Maxime.mp3",
-        "./ViZZion_albom.jpg"
+        "./mp3/ViZZion - Maxime.mp3",
+        "./img/ViZZion_albom.jpg"
       ],
       [
         "ViZZion",
         "Vollmond ",
-        "./ViZZion - Vollmond.mp3",
-        "./ViZZion_albom.jpg"
+        "./mp3/ViZZion - Vollmond.mp3",
+        "./img/ViZZion_albom.jpg"
       ]
     ];
     this.displayTrack = this.displayTrack.bind(this);
@@ -100,16 +100,8 @@ class MusicPlayer {
     albumArt.src = img;
     albumArt.alt = artist + " " + track;
     document.getElementById('audio').src = audio;
-
     let audioElement = document.getElementById('audio');
-    // audioElement.addEventListener('ended', () => {
-
     audioElement.removeEventListener('ended', this.addTrackEndedListener);
-    // let currentIndex = parseInt(document.querySelector('.is-active').dataset.index);
-    // let nextIndex = (currentIndex + 1) % this.src.length;
-    // console.log('new Date.now()');
-    // this.displayTrack(nextIndex);
-    // });
   }
 
   addTrackEndedListener() {
