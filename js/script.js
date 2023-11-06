@@ -1,38 +1,41 @@
 class MusicPlayer {
   constructor() {
-
-    this.src = [
-      [
-        "ViZZion",
-        "Keine Patrioten",
-        "./mp3/ViZZion - Keine Patrioten.mp3",
-        "./img/ViZZion.jpg"
-      ],
-      [
-        "Vizzion feat. Taktikka",
-        "Nique la police",
-        "./mp3/ViZZion - Nique la police.mp3",
-        "./img/Vizzion_Nique-la-police.jpg"
-      ],
-      [
-        "ViZZion",
-        "Unter Verdacht",
-        "./mp3/ViZZion - Unter Verdacht.mp3",
-        "./img/VuZZion_Unter-Verdacht.jpg"
-      ],
-      [
-        "ViZZion",
-        "Maxime",
-        "./mp3/ViZZion - Maxime.mp3",
-        "./img/ViZZion_albom.jpg"
-      ],
-      [
-        "ViZZion",
-        "Vollmond ",
-        "./mp3/ViZZion - Vollmond.mp3",
-        "./img/ViZZion_albom.jpg"
-      ]
+    this.songs = [
+      {
+        artist: "ViZZion",
+        track: "Keine Patrioten",
+        audioURL: "./mp3/ViZZion - Keine Patrioten.mp3",
+        artURL: "./img/ViZZion.jpg"
+      },
+      {
+        artist: "Vizzion feat. Taktikka",
+        track: "Nique la police",
+        audioURL: "./mp3/ViZZion - Nique la police.mp3",
+        artURL: "./img/Vizzion_Nique-la-police.jpg"
+      },
+      {
+        artist: "ViZZion",
+        track: "Unter Verdacht",
+        audioURL: "./mp3/ViZZion - Unter Verdacht.mp3",
+        artURL: "./img/VuZZion_Unter-Verdacht.jpg"
+      },
+      {
+        artist: "ViZZion",
+        track: "Maxime",
+        audioURL: "./mp3/ViZZion - Maxime.mp3",
+        artURL: "./img/ViZZion_albom.jpg"
+      },
+      {
+        artist: "ViZZion",
+        track: "Vollmond ",
+        audioURL: "./mp3/ViZZion - Vollmond.mp3",
+        artURL: "./img/ViZZion_albom.jpg"
+      }
     ];
+
+    this.currentSongIndex = 0;
+    this.audioElement = document.getElementById('audio');
+
     this.displayTrack = this.displayTrack.bind(this);
     this.addTrackEndedListener = this.addTrackEndedListener.bind(this);
   }
@@ -40,81 +43,66 @@ class MusicPlayer {
   initialize() {
     document.addEventListener('DOMContentLoaded', () => {
       this.renderList();
-      this.displayTrack(0);
+      this.displayTrack(this.currentSongIndex);
       this.addClickHandlers();
-
-      this.audioElement = document.getElementById('audio');
       this.addTrackEndedListener();
-      this.audioElement.addEventListener('ended', this.addTrackEndedListener);
     });
   }
 
   renderList() {
-    for (let x = 0; x < this.src.length; x++) {
-      let s = this.src[x];
-      let number = parseInt(x) + 1;
-      let artist = document.createTextNode(number + ": " + s[0]);
-      let track_name = document.createTextNode(s[1]);
-      let listItem = document.createElement('div');
-      let artist_text = document.createElement('h3');
-      let track_text = document.createElement('p');
+    const listElement = document.getElementById('list');
+    for (let i = 0; i < this.songs.length; i++) {
+      const song = this.songs[i];
 
-      artist_text.appendChild(artist);
-      track_text.appendChild(track_name);
-
-      listItem.appendChild(artist_text);
-      listItem.appendChild(track_text);
-
+      const listItem = document.createElement('div');
       listItem.classList.add('item');
-      listItem.dataset.index = x;
+      listItem.dataset.index = i;
 
-      document.getElementById('list').appendChild(listItem);
-    }
-  }
+      const songNumber = i + 1;
+      const songArtist = document.createTextNode(`${songNumber}: <span class="math-inline">\{song\.artist\}\`\);
+const songTrack \= document\.createTextNode\(song\.track\);
+const artistElement \= document\.createElement\('h3'\);
+artistElement\.appendChild\(songArtist\);
+const trackElement \= document\.createElement\('p'\);
+trackElement\.appendChild\(songTrack\);
+listItem\.appendChild\(artistElement\);
+listItem\.appendChild\(trackElement\);
+listElement\.appendChild\(listItem\);
+\}
+\}
+addClickHandlers\(\) \{
+const listItems \= document\.querySelectorAll\('\.item'\);
+listItems\.forEach\(el \=\> \{
+el\.onclick \= \(\) \=\> \{
+this\.displayTrack\(parseInt\(el\.dataset\.index\)\);
+\};
+\}\);
+\}
+displayTrack\(index\) \{
+const activeElement \= document\.querySelector\('\.is\-active'\);
+if \(activeElement\) \{
+activeElement\.classList\.remove\('is\-active'\);
+\}
+const selectedSong \= this\.songs\[index\];
+const selectedItem \= document\.getElementById\('list'\)\.children\[index\];
+selectedItem\.classList\.add\('is\-active'\);
+document\.getElementById\('title'\)\.innerText \= \`</span>{index + 1}: <span class="math-inline">\{selectedSong\.artist\}\`;
+document\.getElementById\('song\_title'\)\.innerText \= selectedSong\.track;
+const albumArt \= document\.getElementById\('art'\);
+albumArt\.src \= selectedSong\.artURL;
+albumArt\.alt \= \`</span>{selectedSong.artist} ${selectedSong.track}`;
 
-  addClickHandlers() {
-    let listItems = document.querySelectorAll('.item');
-    listItems.forEach(el => {
-      el.onclick = () => {
-        this.displayTrack(el.dataset.index);
-      };
-    });
-  }
-
-  displayTrack(x) {
-    let active = document.querySelector('.is-active');
-    if (active) {
-      active.classList.remove('is-active');
-    }
-    let el = document.getElementById('list').children[x];
-    el.classList.add('is-active');
-    let s = this.src[x],
-      artist = s[0],
-      track = s[1],
-      audio = s[2],
-      img = s[3],
-      number = parseInt(x) + 1;
-    document.getElementById('title').innerText = number + ": " + artist;
-    document.getElementById('song_title').innerText = track;
-    let albumArt = document.getElementById('art');
-    albumArt.src = img;
-    albumArt.alt = artist + " " + track;
-    document.getElementById('audio').src = audio;
-    let audioElement = document.getElementById('audio');
-    audioElement.removeEventListener('ended', this.addTrackEndedListener);
+    document.getElementById('audio').src = selectedSong.audioURL;
+    this.audioElement.addEventListener('ended', this.addTrackEndedListener);
   }
 
   addTrackEndedListener() {
-    const audioElement = document.getElementById('audio');
-    audioElement.addEventListener('ended', () => {
-      let currentIndex = parseInt(document.querySelector('.is-active').dataset.index);
-      let nextIndex = (currentIndex + 1) % this.src.length;
+    this.audioElement.addEventListener('ended', () => {
+      const nextIndex = (this.currentSongIndex + 1) % this.songs.length;
       this.displayTrack(nextIndex);
     });
   }
-
-
 }
 
 const musicPlayer = new MusicPlayer();
-musicPlayer.initialize();
+musicPlayer.
