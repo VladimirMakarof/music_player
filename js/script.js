@@ -35,9 +35,6 @@ class MusicPlayer {
 
     this.currentSongIndex = 0;
     this.audioElement = document.getElementById('audio');
-
-    this.displayTrack = this.displayTrack.bind(this);
-    this.addTrackEndedListener = this.addTrackEndedListener.bind(this);
   }
 
   initialize() {
@@ -51,58 +48,53 @@ class MusicPlayer {
 
   renderList() {
     const listElement = document.getElementById('list');
-    for (let i = 0; i < this.songs.length; i++) {
-      const song = this.songs[i];
-
+    this.songs.forEach((song, i) => {
       const listItem = document.createElement('div');
-      listItem.classList.add('item');
+      listItem.className = 'item';
       listItem.dataset.index = i;
 
-      const songNumber = i + 1;
-      const songArtist = document.createTextNode(`${songNumber}: <span class="math-inline">\{song\.artist\}\`\);
-const songTrack \= document\.createTextNode\(song\.track\);
-const artistElement \= document\.createElement\('h3'\);
-artistElement\.appendChild\(songArtist\);
-const trackElement \= document\.createElement\('p'\);
-trackElement\.appendChild\(songTrack\);
-listItem\.appendChild\(artistElement\);
-listItem\.appendChild\(trackElement\);
-listElement\.appendChild\(listItem\);
-\}
-\}
-addClickHandlers\(\) \{
-const listItems \= document\.querySelectorAll\('\.item'\);
-listItems\.forEach\(el \=\> \{
-el\.onclick \= \(\) \=\> \{
-this\.displayTrack\(parseInt\(el\.dataset\.index\)\);
-\};
-\}\);
-\}
-displayTrack\(index\) \{
-const activeElement \= document\.querySelector\('\.is\-active'\);
-if \(activeElement\) \{
-activeElement\.classList\.remove\('is\-active'\);
-\}
-const selectedSong \= this\.songs\[index\];
-const selectedItem \= document\.getElementById\('list'\)\.children\[index\];
-selectedItem\.classList\.add\('is\-active'\);
-document\.getElementById\('title'\)\.innerText \= \`</span>{index + 1}: <span class="math-inline">\{selectedSong\.artist\}\`;
-document\.getElementById\('song\_title'\)\.innerText \= selectedSong\.track;
-const albumArt \= document\.getElementById\('art'\);
-albumArt\.src \= selectedSong\.artURL;
-albumArt\.alt \= \`</span>{selectedSong.artist} ${selectedSong.track}`;
+      listItem.innerHTML = `
+        <h3>${i + 1}: ${song.artist}</h3>
+        <p>${song.track}</p>
+      `;
 
-    document.getElementById('audio').src = selectedSong.audioURL;
-    this.audioElement.addEventListener('ended', this.addTrackEndedListener);
+      listElement.appendChild(listItem);
+    });
+  }
+
+  addClickHandlers() {
+    const listItems = document.querySelectorAll('.item');
+    listItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const index = parseInt(item.dataset.index);
+        this.displayTrack(index);
+      });
+    });
+  }
+
+  displayTrack(index) {
+    if (this.currentSongIndex !== index) {
+      this.currentSongIndex = index;
+      const selectedSong = this.songs[index];
+
+      document.querySelector('.is-active')?.classList.remove('is-active');
+      document.getElementById('list').children[index].classList.add('is-active');
+
+      document.getElementById('title').innerText = `${index + 1}: ${selectedSong.artist}`;
+      document.getElementById('song_title').innerText = selectedSong.track;
+      document.getElementById('art').src = selectedSong.artURL;
+      document.getElementById('art').alt = `${selectedSong.artist} ${selectedSong.track}`;
+      this.audioElement.src = selectedSong.audioURL;
+    }
   }
 
   addTrackEndedListener() {
-    this.audioElement.addEventListener('ended', () => {
+    this.audioElement.onended = () => {
       const nextIndex = (this.currentSongIndex + 1) % this.songs.length;
       this.displayTrack(nextIndex);
-    });
+    };
   }
 }
 
 const musicPlayer = new MusicPlayer();
-musicPlayer.
+musicPlayer.initialize();
